@@ -147,24 +147,34 @@ We use the Typescript library on the backend and also on the frontend to generat
 
 ### Back-end requests
 <a name="back-end-requests"></a>
-The backend currently has a controller for only one request, which is triggered when GET requests are called for the `/api/scrape` route, which also requires a query `?keyword=abc`.
+The backend currently has a controller for only one request, which is triggered when GET requests are called for the `/api/scrape` endpoint, which requires a query `?keyword=abc`. If the provided keyword is valid, the list of Amazon products results are returned.
 
 <p align="right">(<a href="#readme-top">Back to the top</a>)</p>
 
 
 ## How to use?
 <a name="how-to-use"></a>
-1. Using the API 
+### Using the API 
+1. Run the server  
+
+    Inside the folder `/api`, run your server with the following command:
+     
+       ```sh
+       npm run dev
+       ```
+
+     
+2. Access the endpoint
 
     To use the API, with the server running, just access the route `localhost/api/scrape` and pass the desired `?keyword` for the search. Upon confirmation, you will have access to all search results in a JSON format.
   
     <img src="https://github.com/GustavoCoelho1/amazon-search/assets/92497249/8df40d0d-94d8-4a37-be10-e2ddf71cbdc9" alt="Logo" width="400">
 
-2. Using the Front-end  
+### Using the Front-end  
 
-    Using the front-end is a really simple process, just enter the desired keyword in the search bar and click the search button. All results for the corresponding products will then be displayed, and you can access the page of each one just by clicking on the product.
-  
-    <img src="https://github.com/GustavoCoelho1/amazon-search/assets/92497249/c2e97010-6012-4c5c-9707-f787526b48c9" alt="Logo" width="400">
+  Using the front-end is a really simple process, just enter the desired keyword in the search bar and click the search button. All results for the corresponding products will then be displayed, and you can access the page of each one just by clicking on the product.
+
+  <img src="https://github.com/GustavoCoelho1/amazon-search/assets/92497249/c2e97010-6012-4c5c-9707-f787526b48c9" alt="Logo" width="400">
 
 
 
@@ -188,7 +198,7 @@ Gustavo Coelho
 * E-mail: <a href="mailto:gustavocoelho1412@gmail.com">gustavocoelho1412@gmail.com</a>
 * Repository: <a href="https://gustavo-coelho-portfolio.vercel.app/">Gustavo Coelho - Repositório</a>
 
-🔗 Project link: [github.com/GustavoCoelho1/ibm-wallet](https://github.com/GustavoCoelho1/amazon-search)
+🔗 Project link: [github.com/GustavoCoelho1/amazon-search](https://github.com/GustavoCoelho1/amazon-search)
 
 <p align="right">(<a href="#readme-top">Back to the top</a>)</p>
 
