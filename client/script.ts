@@ -6,6 +6,14 @@ const resultsContainer = document.getElementById(
     "results-container"
 ) as HTMLDivElement;
 const blankSlate = document.getElementById("blank-slate") as HTMLDivElement;
+const searchForm = document.getElementById("search-form") as HTMLFormElement;
+const errorContainer = document.getElementById(
+    "error-container"
+) as HTMLDivElement;
+const searchInfo = document.getElementById("search-info") as HTMLSpanElement;
+const searchInfoContent = document.querySelector(
+    "#search-info b"
+) as HTMLSpanElement;
 
 interface Product {
     title: string;
@@ -15,9 +23,8 @@ interface Product {
     link: string;
 }
 
-const searchForm = document.getElementById("search-form") as HTMLFormElement;
-
 const createStarsRatingElement = (rating: number) => {
+    //Stating the elements into variables, to make it easier to handle them later
     const fullStarElement = `<img src="assets/full-star.svg" alt="" />`;
     const halfStarElement = `<img src="assets/half-star.svg" alt="" />`;
     const emptyStarElement = `<img src="assets/empty-star.svg" alt="" />`;
@@ -42,6 +49,7 @@ const createStarsRatingElement = (rating: number) => {
         }
     }
 
+    //Creating a element/string with all the elements that was pushed into the star elements array
     let starRatingElementContent = "";
 
     starsArr.forEach((starElement) => {
@@ -62,10 +70,13 @@ const createProductElement = (product: Product) => {
 
     const element = document.createElement("a");
 
+    //Setting the style for the product container
     element.className = "product-container";
 
+    //Getting the ready model of the star ratings
     const starRatingElement = createStarsRatingElement(rating);
 
+    //Setting the inner HTML of the final element by a string, it makes easier to set the elements content and the classes
     const elementInnerHTML = `
         <img
             class="product-image"
@@ -94,39 +105,68 @@ const createProductElement = (product: Product) => {
 
     element.innerHTML = elementInnerHTML;
 
+    //Setting the product amazon link for each container
     element.href = link;
 
     return element;
 };
 
 searchForm.addEventListener("submit", (e) => {
+    //Preventing the form from submiting and reloading the page
     e.preventDefault();
 
+    const searchKeyword = searchInput.value;
+
+    //Restarting elements to empty state
     resultsContainer.innerHTML = "";
+    searchInfo.className = "removed";
+    errorContainer.className = "message-container";
+
+    //Making the loading gif appears inside the search button
     searchButton.className = "search-button loading";
 
     const http = new XMLHttpRequest();
 
     http.onreadystatechange = () => {
-        if ((http.readyState === 4, http.status === 200)) {
-            // Manipula a resposta do servidor aqui
-            const products = JSON.parse(http.response) as Product[];
+        console.log(http);
 
+        if (http.readyState === 4 && http.status === 200) {
+            //If the request was successful
+
+            //Hiding the blank slate div
             blankSlate.className = "removed";
 
+            //Setting search keyword information
+            searchInfo.className = "search-info show";
+            searchInfoContent.innerText = `${searchKeyword}`;
+
+            const products = JSON.parse(http.response) as Product[];
+
+            //For each product in the JSON, we generate a new element in the page
             products.forEach((product) => {
                 const newProductElement = createProductElement(product);
 
                 resultsContainer.appendChild(newProductElement);
             });
 
+            //Returning search icon to normal state
             searchButton.className = "search-button";
-        } else {
-            console.log(JSON.parse(http.response));
         }
     };
 
-    const searchKeyword = searchInput.value;
+    //If the request was unsuccessful
+    http.onerror = () => {
+        console.log(http.response);
+
+        //Hiding the blank slate div
+        blankSlate.className = "removed";
+
+        //Returning search icon to normal state
+        searchButton.className = "search-button";
+
+        //Display the error message
+        errorContainer.className = "message-container show";
+    };
 
     http.open(
         "GET",

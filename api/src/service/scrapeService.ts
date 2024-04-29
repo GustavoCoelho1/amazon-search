@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+//File dedicated for handle all the request business logic
 export default class ScrapeService {
     amazonUrl = process.env.AMAZON_URL;
 
@@ -19,7 +20,7 @@ export default class ScrapeService {
 
         const dom = new JSDOM(searchResponse.data);
 
-        //Transforming product data into objects
+        //Transforming node elements into objects
         const rawProducts = this.getProductElementsList(dom);
         const products = this.formatProductElementsList(rawProducts);
 
@@ -31,6 +32,7 @@ export default class ScrapeService {
             `[data-component-type=s-search-result]`
         )!;
 
+        //If there is no products in the page
         if (productElementsList.length === 0)
             throw new ValidationException("No results for entered search");
 
@@ -40,6 +42,7 @@ export default class ScrapeService {
     formatProductElementsList = (productElementsList: NodeListOf<Element>) => {
         const products: Product[] = [];
 
+        //Get product info (title, rating, ...) for each product in the amazon search page, and push everything into the final products variable
         productElementsList.forEach((product, idx) => {
             try {
                 const title = this.getAmazonProductTitle(product);
@@ -77,6 +80,7 @@ export default class ScrapeService {
             "[data-cy=title-recipe] h2 span"
         );
 
+        //If product title element was not found
         if (!title)
             throw new ValidationException("The product title can not be null!");
 
@@ -84,9 +88,9 @@ export default class ScrapeService {
     };
 
     getAmagetAmazonProductRating = (productElement: Element) => {
-        const rawRatingElement = productElement.querySelector("i .a-icon-alt"); //Expected: 4,5 out of 5 stars
+        const rawRatingElement = productElement.querySelector("i .a-icon-alt"); //Expected model example: "4,5 out of 5 stars"
 
-        if (!rawRatingElement) return 0; //Some products doesnt has rating
+        if (!rawRatingElement) return 0; //Some products does not has a rating
 
         const rawRating = rawRatingElement.textContent;
 
@@ -104,11 +108,11 @@ export default class ScrapeService {
             "span.a-size-base.s-underline-text"
         );
 
-        if (!reviewsNumberElement) return 0; //Some products doesnt has reviews
+        if (!reviewsNumberElement) return 0; //Some products does not has reviews
 
         const reviewsNumberStr = reviewsNumberElement.textContent;
 
-        const reviewsNumber = Number(reviewsNumberStr?.replace(",", "."));
+        const reviewsNumber = Number(reviewsNumberStr?.replace(",", ".")); //Replacing "," because we can get big numbers like "3,000 reviews", and for the conversion the number must have a "." instead.
 
         return reviewsNumber;
     };
@@ -118,6 +122,7 @@ export default class ScrapeService {
             "[data-component-type=s-product-image] img"
         );
 
+        //If the product image element was not found
         if (!image)
             throw new ValidationException("The product image can not be null!");
 
@@ -131,11 +136,13 @@ export default class ScrapeService {
             "[data-cy=title-recipe] h2 a"
         );
 
+        //If the product link was not found
         if (!linkElement)
             throw new ValidationException("The product link can not be null");
 
         const productRoute = linkElement?.getAttribute("href");
 
+        //Joining the amazon URL because in the amazon website the url comes in half, missing the first host name "www.amazon.com"
         const link = `${this.amazonUrl}${productRoute}`;
 
         return link;

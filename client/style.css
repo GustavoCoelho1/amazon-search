@@ -7,6 +7,7 @@
 
 body {
     width: 100vw;
+    overflow-x: hidden;
     min-height: 100vh;
 }
 
@@ -39,6 +40,7 @@ button {
 .search-form {
     display: flex;
     width: 100%;
+    max-width: 800px;
     justify-content: center;
 }
 
@@ -80,6 +82,11 @@ button {
     display: none;
 }
 
+.search-info {
+    font-size: 1.25rem;
+    color: #610200;
+}
+
 footer {
     width: 100%;
     display: flex;
@@ -116,7 +123,15 @@ a {
     height: 15px;
 }
 
-.blank-slate {
+#error-container.message-container {
+    display: none;
+}
+
+#error-container.message-container.show {
+    display: flex;
+}
+
+.message-container {
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -125,12 +140,12 @@ a {
     border: 1px solid rgb(241, 241, 241);
 }
 
-.blank-slate span {
+.message-container span {
     color: rgb(207, 207, 207);
     text-align: center;
 }
 
-.blank-slate img {
+.message-container img {
     height: 250px;
 }
 

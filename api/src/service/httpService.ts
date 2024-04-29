@@ -1,5 +1,6 @@
 import axios from "axios";
 
+//File dedicated for the application Http requests service, that here is made using with Axios.
 export default class HttpService {
     fetch = async (url: string) => {
         try {
